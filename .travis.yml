@@ -1,0 +1,12 @@
+language: c
+
+compiler: gcc
+
+sudo: false
+
+before_script:
+  - mkdir build
+  - cd build
+  - cmake ..
+
+script: cmake --build . && ctest -V .
