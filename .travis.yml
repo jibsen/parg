@@ -10,7 +10,7 @@ before_install:
 before_script:
   - mkdir build
   - cd build
-  - cmake -DBUILD_COVERAGE=ON ..
+  - cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_COVERAGE=ON ..
 
 script: cmake --build . && ctest -V .
 
