@@ -224,7 +224,7 @@ parg_reorder(int argc, char *argv[],
 		return argc;
 	}
 
-	new_argv = calloc(argc, sizeof(argv[0]));
+	new_argv = calloc((size_t) argc, sizeof(argv[0]));
 
 	if (new_argv == NULL) {
 		return -1;

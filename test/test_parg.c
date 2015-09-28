@@ -19,17 +19,15 @@
 
 #define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]))
 
-const char *os_def = ":no::r:";
+static const char *os_def = ":no::r:";
 
-const struct parg_option po_zero[] = { { 0 } };
-
-const struct parg_option po_def[] = {
+static const struct parg_option po_def[] = {
 	{ "noarg", PARG_NOARG, NULL, 'n' },
 	{ "optarg", PARG_OPTARG, NULL, 'o' },
 	{ "reqarg", PARG_REQARG, NULL, 'r' },
 	{ "foo", PARG_NOARG, NULL, 'f' },
 	{ "foobar", PARG_NOARG, NULL, 'b' },
-	{ 0 }
+	{ 0, 0, 0, 0 }
 };
 
 /*
@@ -325,7 +323,7 @@ TEST parg_getopt_long_flag(void)
 	int flag = 0;
 	struct parg_option po_flag[] = {
 		{ "flag", PARG_NOARG, &flag, 1 },
-		{ 0 }
+		{ 0, 0, 0, 0 }
 	};
 
 	parg_init(&ps);
