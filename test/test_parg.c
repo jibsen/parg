@@ -322,9 +322,11 @@ TEST parg_getopt_long_flag(void)
 	int li = -1;
 	int flag = 0;
 	struct parg_option po_flag[] = {
-		{ "flag", PARG_NOARG, &flag, 1 },
+		{ "flag", PARG_NOARG, 0, 1 },
 		{ 0, 0, 0, 0 }
 	};
+
+	po_flag[0].flag = &flag;
 
 	parg_init(&ps);
 
