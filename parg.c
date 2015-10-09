@@ -130,7 +130,7 @@ match_long(struct parg_state *ps, int argc, char *const argv[],
 
 	ps->nextchar = NULL;
 
-	if (longopts[match].flag) {
+	if (longopts[match].flag != NULL) {
 		*longopts[match].flag = longopts[match].val;
 		return 0;
 	}
