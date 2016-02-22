@@ -247,7 +247,7 @@ parg_reorder(int argc, char *argv[],
 			assert(ps.optind - curind == 1);
 
 			/* Add nonoption to end of new_argv */
-			new_argv[--end] = (char *) ps.optarg;
+			new_argv[--end] = argv[curind];
 		}
 		else {
 			/* Add option with any argument to start of new_argv */
