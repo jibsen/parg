@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 2.8)
 
 project(parg C)
 
+include(CheckCCompilerFlag)
 include(CTest)
 
 option(BUILD_COVERAGE "Code coverage" OFF)
@@ -26,8 +27,14 @@ elseif(CMAKE_COMPILER_IS_GNUCC)
     -Wmissing-prototypes
   )
   foreach(flag ${gcc_warning_flags})
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${flag}")
+    string(REGEX REPLACE "[^a-zA-Z0-9]+" "_" flag_var "CFLAG_${flag}")
+    CHECK_C_COMPILER_FLAG("${flag}" ${flag_var})
+    if(${flag_var})
+      set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${flag}")
+    endif()
+    unset(flag_var)
   endforeach()
+  unset(gcc_warning_flags)
 elseif(CMAKE_C_COMPILER_ID MATCHES "Clang")
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Weverything -pedantic")
 endif()
