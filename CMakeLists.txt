@@ -40,7 +40,7 @@ elseif(CMAKE_C_COMPILER_ID MATCHES "Clang")
 endif()
 
 if(BUILD_COVERAGE)
-	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -O0 --coverage")
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -O0 --coverage")
 endif()
 
 include_directories(${PROJECT_SOURCE_DIR})
@@ -48,9 +48,9 @@ include_directories(${PROJECT_SOURCE_DIR})
 add_library(parg parg.c parg.h)
 
 if(BUILD_TESTING)
-	add_executable(test_parg test/test_parg.c test/greatest.h parg.h)
-	target_link_libraries(test_parg parg)
+  add_executable(test_parg test/test_parg.c test/greatest.h parg.h)
+  target_link_libraries(test_parg parg)
 
-	enable_testing()
-	add_test(test_parg test_parg)
+  enable_testing()
+  add_test(test_parg test_parg)
 endif()
