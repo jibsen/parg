@@ -17,3 +17,6 @@ script: cmake --build . && ctest -V .
 after_success:
   - gcov CMakeFiles/parg.dir/parg.c.gcno -o CMakeFiles/parg.dir
   - codecov -X gcov
+
+notifications:
+  email: false
