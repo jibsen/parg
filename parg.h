@@ -93,7 +93,7 @@ parg_init(struct parg_state *ps);
  * If no option character in `optstring` matches a short option, `optopt`
  * is set to the option character, and '`?`' is returned.
  *
- * If an elements of argv does not contain options (a nonoption element),
+ * If an element of argv does not contain options (a nonoption element),
  * `optarg` points to the element, and `1` is returned.
  *
  * An element consisting of a single dash, '`-`', is returned as a nonoption.
