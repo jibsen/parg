@@ -187,6 +187,7 @@ parg_getopt_long(struct parg_state *ps, int argc, char *const argv[],
 		/* Check for '--' */
 		if (ps->nextchar[1] == '-') {
 			if (ps->nextchar[2] == '\0') {
+				ps->nextchar = NULL;
 				return -1;
 			}
 
