@@ -1,7 +1,7 @@
 /*
  * parg - parse argv
  *
- * Written in 2015 by Joergen Ibsen
+ * Written in 2015-2016 by Joergen Ibsen
  *
  * To the extent possible under law, the author(s) have dedicated all
  * copyright and related and neighboring rights to this software to the
