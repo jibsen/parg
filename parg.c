@@ -95,6 +95,7 @@ match_long(struct parg_state *ps, int argc, char *const argv[],
 
 	/* Return '?' on no or ambiguous match */
 	if (num_match != 1) {
+		ps->optopt = 0;
 		ps->nextchar = NULL;
 		return '?';
 	}
