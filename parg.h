@@ -46,7 +46,7 @@ struct parg_option {
 };
 
 /**
- * Values for the `has_arg` flag in `parg_option`.
+ * Values for `has_arg` flag in `parg_option`.
  *
  * @see parg_option
  */
