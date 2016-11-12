@@ -589,6 +589,45 @@ TEST parg_reorder_long(void)
 	PASS();
 }
 
+TEST parg_reorder_app_only(void)
+{
+	char *argv[] = { "app" };
+
+	ASSERT_EQ(1, parg_reorder(ARRAY_SIZE(argv), argv, os_def, NULL));
+
+	PASS();
+}
+
+TEST parg_reorder_double_dash_last(void)
+{
+	char *argv[] = { "app", "foo", "-n", "--" };
+	char *argv_expected[] = { "app", "-n", "--", "foo" };
+	size_t i;
+
+	ASSERT_EQ(3, parg_reorder(ARRAY_SIZE(argv), argv, os_def, NULL));
+
+	for (i = 0; i < ARRAY_SIZE(argv); ++i) {
+		ASSERT_STR_EQ(argv_expected[i], argv[i]);
+	}
+
+	PASS();
+}
+
+TEST parg_reorder_missing_arg_last(void)
+{
+	char *argv[] = { "app", "foo", "-r" };
+	char *argv_expected[] = { "app", "-r", "foo" };
+	size_t i;
+
+	ASSERT_EQ(2, parg_reorder(ARRAY_SIZE(argv), argv, os_def, NULL));
+
+	for (i = 0; i < ARRAY_SIZE(argv); ++i) {
+		ASSERT_STR_EQ(argv_expected[i], argv[i]);
+	}
+
+	PASS();
+}
+
 SUITE(parg_getopt_tests)
 {
 	RUN_TEST(parg_getopt_app_only);
@@ -644,6 +683,12 @@ SUITE(parg_reorder_tests)
 {
 	RUN_TEST(parg_reorder_short);
 	RUN_TEST(parg_reorder_long);
+
+	RUN_TEST(parg_reorder_app_only);
+
+	RUN_TEST(parg_reorder_double_dash_last);
+
+	RUN_TEST(parg_reorder_missing_arg_last);
 }
 
 GREATEST_MAIN_DEFS();
