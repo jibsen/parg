@@ -171,8 +171,8 @@ parg_getopt_long(struct parg_state *ps, int argc, char *const argv[],
  *
  * If there are no long options, `longopts` may be `NULL`.
  *
- * @note The current implementation does not permute `argv` in place, it
- * allocates a temporary array the same size as `argv`.
+ * The return value can be used as `argc` parameter for `parg_getopt()` and
+ * `parg_getopt_long()`.
  *
  * @param argc number of elements in `argv`
  * @param argv array of pointers to command-line arguments

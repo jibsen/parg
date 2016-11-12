@@ -206,17 +206,118 @@ parg_getopt_long(struct parg_state *ps, int argc, char *const argv[],
 	return match_short(ps, argc, argv, optstring);
 }
 
+/*
+ * Reverse elements of `v` from `i` to `j`.
+ */
+static void
+reverse(char *v[], int i, int j)
+{
+	while (j - i > 1) {
+		char *tmp = v[i];
+		v[i] = v[j - 1];
+		v[j - 1] = tmp;
+		++i;
+		--j;
+	}
+}
+
+/*
+ * Reorder elements of `argv` with no special cases.
+ *
+ * This function assumes there is no `--` element, and the last element
+ * is not an option missing a required argument.
+ *
+ * The algorithm is described here:
+ * http://hardtoc.com/2016/11/07/reordering-arguments.html
+ */
+static int
+parg_reorder_simple(int argc, char *argv[],
+                    const char *optstring,
+                    const struct parg_option *longopts)
+{
+	struct parg_state ps;
+	int change;
+	int l = 0;
+	int m = 0;
+	int r = 0;
+
+	if (argc < 2) {
+		return argc;
+	}
+
+	do {
+		int nextind;
+		int c;
+
+		parg_init(&ps);
+
+		nextind = ps.optind;
+
+		/* Parse until end of argument */
+		do {
+			c = parg_getopt_long(&ps, argc, argv, optstring, longopts, NULL);
+		} while (ps.nextchar != NULL && *ps.nextchar != '\0');
+
+		change = 0;
+
+		do {
+			/* Find next non-option */
+			for (l = nextind; c != 1 && c != -1;) {
+				l = ps.optind;
+
+				do {
+					c = parg_getopt_long(&ps, argc, argv, optstring, longopts, NULL);
+				} while (ps.nextchar != NULL && *ps.nextchar != '\0');
+			}
+
+			/* Find next option */
+			for (m = l; c == 1;) {
+				m = ps.optind;
+
+				do {
+					c = parg_getopt_long(&ps, argc, argv, optstring, longopts, NULL);
+				} while (ps.nextchar != NULL && *ps.nextchar != '\0');
+			}
+
+			/* Find next non-option */
+			for (r = m; c != 1 && c != -1;) {
+				r = ps.optind;
+
+				do {
+					c = parg_getopt_long(&ps, argc, argv, optstring, longopts, NULL);
+				} while (ps.nextchar != NULL && *ps.nextchar != '\0');
+			}
+
+			/* Find next option */
+			for (nextind = r; c == 1;) {
+				nextind = ps.optind;
+
+				do {
+					c = parg_getopt_long(&ps, argc, argv, optstring, longopts, NULL);
+				} while (ps.nextchar != NULL && *ps.nextchar != '\0');
+			}
+
+			if (m < r) {
+				change = 1;
+				reverse(argv, l, m);
+				reverse(argv, m, r);
+				reverse(argv, l, r);
+			}
+		} while (c != -1);
+	} while (change != 0);
+
+	return l + (r - m);
+}
+
 int
 parg_reorder(int argc, char *argv[],
              const char *optstring,
              const struct parg_option *longopts)
 {
 	struct parg_state ps;
-	char **new_argv = NULL;
-	int start = 1;
-	int end = argc;
-	int curind;
-	int i;
+	int lastind;
+	int optend;
+	int c;
 
 	assert(argv != NULL);
 	assert(optstring != NULL);
@@ -225,63 +326,29 @@ parg_reorder(int argc, char *argv[],
 		return argc;
 	}
 
-	new_argv = calloc((size_t) argc, sizeof(argv[0]));
-
-	if (new_argv == NULL) {
-		return -1;
-	}
-
-	new_argv[0] = argv[0];
-
 	parg_init(&ps);
 
-	for (;;) {
-		int c;
-
-		curind = ps.optind;
+	/* Find end of normal arguments */
+	do {
+		lastind = ps.optind;
 
 		c = parg_getopt_long(&ps, argc, argv, optstring, longopts, NULL);
 
-		if (c == -1) {
+		/* Check for trailing option with error */
+		if ((c == '?' || c == ':') && is_argv_end(&ps, argc, argv)) {
+			lastind = ps.optind - 1;
 			break;
 		}
-		else if (c == 1) {
-			assert(ps.optind - curind == 1);
+	} while (c != -1);
 
-			/* Add nonoption to end of new_argv */
-			new_argv[--end] = argv[curind];
-		}
-		else {
-			/* Add option with any argument to start of new_argv */
-			while (curind < ps.optind) {
-				new_argv[start++] = argv[curind++];
-			}
-		}
+	optend = parg_reorder_simple(lastind, argv, optstring, longopts);
+
+	/* Rotate `--` or trailing option with error into position */
+	if (lastind < argc) {
+		reverse(argv, optend, lastind);
+		reverse(argv, optend, lastind + 1);
+		++optend;
 	}
 
-	if (end > start) {
-		assert(strcmp(argv[curind], "--") == 0);
-
-		/* Copy '--' element */
-		new_argv[start++] = argv[curind++];
-
-		/* Copy remaining nonoptions to end of new_argv */
-		for (i = curind; end > start; ++i) {
-			new_argv[--end] = argv[i];
-		}
-	}
-
-	/* Copy options back to argv */
-	for (i = 1; i < end; ++i) {
-		argv[i] = new_argv[i];
-	}
-
-	/* Copy nonoptions in reverse order to argv */
-	for (; i < argc; ++i) {
-		argv[i] = new_argv[argc - i + end - 1];
-	}
-
-	free(new_argv);
-
-	return end;
+	return optend;
 }
