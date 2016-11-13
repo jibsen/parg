@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 2.8.6)
 
 project(parg C)
 
@@ -9,13 +9,22 @@ option(BUILD_COVERAGE "Code coverage" OFF)
 
 message(STATUS "CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
 
+function(_add_c_compiler_flags var)
+  foreach(flag ${ARGN})
+    string(REGEX REPLACE "[^a-zA-Z0-9]+" "_" flag_var "CFLAG_${flag}")
+    check_c_compiler_flag("${flag}" ${flag_var})
+    if(${flag_var})
+      set(${var} "${${var}} ${flag}")
+    endif()
+  endforeach()
+  set(${var} "${${var}}" PARENT_SCOPE)
+endfunction()
+
 if(MSVC)
+  _add_c_compiler_flags(CMAKE_C_FLAGS "/analyze")
   add_definitions(/D_CRT_SECURE_NO_WARNINGS)
-  if(NOT MSVC_VERSION LESS 1700)
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /analyze")
-  endif()
 elseif(CMAKE_COMPILER_IS_GNUCC)
-  set(gcc_warning_flags
+  _add_c_compiler_flags(CMAKE_C_FLAGS
     -Wall
     -Wextra
     -pedantic
@@ -26,17 +35,8 @@ elseif(CMAKE_COMPILER_IS_GNUCC)
     -Wstrict-prototypes
     -Wmissing-prototypes
   )
-  foreach(flag ${gcc_warning_flags})
-    string(REGEX REPLACE "[^a-zA-Z0-9]+" "_" flag_var "CFLAG_${flag}")
-    CHECK_C_COMPILER_FLAG("${flag}" ${flag_var})
-    if(${flag_var})
-      set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${flag}")
-    endif()
-    unset(flag_var)
-  endforeach()
-  unset(gcc_warning_flags)
 elseif(CMAKE_C_COMPILER_ID MATCHES "Clang")
-  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Weverything -pedantic")
+  _add_c_compiler_flags(CMAKE_C_FLAGS "-Weverything;-pedantic")
 endif()
 
 if(BUILD_COVERAGE)
