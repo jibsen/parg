@@ -18,8 +18,8 @@ extern "C" {
 
 #define PARG_VER_MAJOR 1        /**< Major version number */
 #define PARG_VER_MINOR 0        /**< Minor version number */
-#define PARG_VER_PATCH 1        /**< Patch version number */
-#define PARG_VER_STRING "1.0.1" /**< Version number as a string */
+#define PARG_VER_PATCH 2        /**< Patch version number */
+#define PARG_VER_STRING "1.0.2" /**< Version number as a string */
 
 /**
  * Structure containing state between calls to parser.
