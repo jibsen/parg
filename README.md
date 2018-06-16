@@ -192,14 +192,21 @@ Other command-line parsing libraries that support C:
   - [Gengetopt](http://www.gnu.org/software/gengetopt/)
   - [Argp](http://www.gnu.org/software/libc/manual/html_node/Argp.html)
   - [popt](http://en.wikipedia.org/wiki/Popt)
-  - [argtable](http://argtable.sourceforge.net/)
+  - [argtable](https://www.argtable.org/)
   - [optlist](http://michael.dipperstein.com/optlist/)
   - [Arg_parser](http://www.nongnu.org/arg-parser/arg_parser.html)
   - [Gopt](http://www.purposeful.co.uk/software/gopt/)
   - [docopt](http://docopt.org/)
+  - [optparse](https://github.com/skeeto/optparse)
+  - [getopt](https://github.com/wc-duck/getopt)
+  - [argparse](https://github.com/cofyc/argparse)
 
 A few C++ command-line parsing libraries:
 
   - [TCLAP](http://tclap.sourceforge.net/)
   - [program_options](http://www.boost.org/doc/libs/1_58_0/doc/html/program_options.html)
   - [CommandLine](http://llvm.org/docs/CommandLine.html)
+  - [CLI11](https://github.com/CLIUtils/CLI11)
+  - [argparse](https://github.com/p-ranav/argparse)
+  - [clipp](https://github.com/muellan/clipp)
+  - [argh](https://github.com/adishavit/argh)
