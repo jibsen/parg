@@ -1,5 +1,5 @@
 
-[![Build Status](https://travis-ci.org/jibsen/parg.svg?branch=master)](https://travis-ci.org/jibsen/parg) [![codecov](https://codecov.io/gh/jibsen/parg/branch/master/graph/badge.svg)](https://codecov.io/gh/jibsen/parg)
+[![parg CI](https://github.com/jibsen/parg/actions/workflows/parg-ci-workflow.yaml/badge.svg)](https://github.com/jibsen/parg/actions) [![codecov](https://codecov.io/gh/jibsen/parg/branch/master/graph/badge.svg)](https://codecov.io/gh/jibsen/parg)
 
 About
 -----
