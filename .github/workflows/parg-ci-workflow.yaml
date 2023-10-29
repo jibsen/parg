@@ -5,13 +5,13 @@ on: [push, pull_request]
 jobs:
   windows:
     name: Windows ${{ matrix.config.name }}
-    runs-on: windows-latest
+    runs-on: windows-2022
 
     strategy:
       matrix:
         config:
           - name: MSVC x64
-            generator: Visual Studio 16 2019
+            generator: Visual Studio 17 2022
             cmake-flags: -A x64
 
     steps:
@@ -50,7 +50,7 @@ jobs:
         run: cmake ${{ matrix.config.cmake-flags }} -DCMAKE_BUILD_TYPE=Debug -B build
 
       - name: Build
-        run: cd build && make VERBOSE=1
+        run: cd build && cmake --build . --verbose
 
       - name: Test
         run: cd build && ctest -V --output-on-failure --interactive-debug-mode 0
@@ -66,7 +66,7 @@ jobs:
         run: cmake -DCMAKE_C_FLAGS_DEBUG='-g -O0 --coverage' -DCMAKE_BUILD_TYPE=Debug -B build
 
       - name: Build
-        run: cd build && make VERBOSE=1
+        run: cd build && cmake --build . --verbose
 
       - name: Test
         run: cd build && ctest -V --output-on-failure --interactive-debug-mode 0
