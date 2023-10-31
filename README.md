@@ -26,10 +26,9 @@ handle the extensions and idiosyncrasies of other `getopt` implementations,
 and document them.
 
 It consists of a single source and include file, written in portable ANSI C.
-It is made available under [CC0][].
+It is made available under the [MIT No Attribution License](LICENSE) (MIT-0).
 
 [getopt]: https://en.wikipedia.org/wiki/Getopt
-[CC0]: http://creativecommons.org/publicdomain/zero/1.0/
 
 
 Usage
